@@ -9,7 +9,7 @@
 		price: 10,
 		category: 'Food',
 		itemName: 'Pizza',
-	}
+
   Output - [{ category: 'Food', totalSpent: 10 }] // Can have multiple categories, only one example is mentioned here
 */
 
