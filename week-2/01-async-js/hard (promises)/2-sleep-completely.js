@@ -5,6 +5,9 @@
  */
 
 function sleep(milliseconds) {
+    return new Promise((resolve)=>{
+        setInterval(resolve, milliseconds)
+    })
 }
 
 module.exports = sleep;
