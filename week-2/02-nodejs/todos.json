@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": 119,
+    "title": "Buy groceries",
+    "completed": true,
+    "description": "Bought some vegitables"
+  },
+  {
+    "id": 427,
+    "title": "Order food from Zomato",
+    "completed": true,
+    "description": "Order Alfam mandi"
+  },
+  {
+    "id": 699,
+    "title": "Go to peepanders house",
+    "completed": true,
+    "description": "i need to take my PSP"
+  }
+]

@@ -38,12 +38,91 @@
     - For any other route not defined in the server return 404
 
   Testing the server - run `npm run test-todoServer` command in terminal
- */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+ */ 
+    const express = require('express');
+    const bodyParser = require('body-parser');
+    const fs = require('fs');
+    const port = 3000;
+    const app = express(); 
+    app.use(bodyParser.json());
+    const data = fs.readFileSync('./todos.json', 'utf-8');
+    let todos = JSON.parse(data);
+    app.get("/todos", (req, res)=>{
+        res.json(todos);
+    })
+    
+    app.get("/todos/:id", (req, res)=>{
+        const idIndex = todos.findIndex(element => element.id == parseInt(req.params.id));
+        if(idIndex == -1){
+            res.json({
+                msg: "Index not valid"
+            })
+        } else { 
+            res.json(todos[idIndex]);
+        }
+    })
+
+    app.post("/todos/", function(req, res){
+        const id = Math.floor(Math.random() * 1000);
+        const title = req.body.title;
+        const completed = req.body.completed;
+        const description = req.body.description;
+
+        todos.push({
+            "id": id,
+            "title": title,
+            "completed": completed,
+            "description": description
+        });
+
+        fs.writeFileSync('todos.json', JSON.stringify(todos, null, 2));
+        res.json({
+            msg: "Successfully Pushed"
+        });
+
+    });
+
+    app.put("/todos/:id", function(req, res){        
+        const todos_by_id = todos.filter((item) => {
+            if(item.id == req.params.id){
+                return true;
+            }
+            return false;
+        });
+        
+        if(todos_by_id == []){
+            res.status(404).json({
+                msg:"index not vaild" 
+            });
+        }else{
+            const idIndex = todos.findIndex(element => element.id == parseInt(req.params.id));
+            todos[idIndex].title = req.body.title;
+            todos[idIndex].description = req.body.description;
+            res.json(todos[idIndex]);
+        }
+
+
+        res.json({
+            msg: "Successfully made changes"
+        })
+
+    });
+
+    app.delete("/todos/:id", function(req, res){
+        const idIndex = todos.findIndex(element => element.id == parseInt(req.params.id));
+        if(idIndex == -1){
+            res.status(404).json({
+                msg: "Index not valid"
+            })
+        } else {
+            todos.splice(idIndex, 1); 
+            res.json({
+                msg: `id: ${id} deleted`
+            })
+        }
+
+    });
+    
+    console.log(`Server Active : http://localhost:${port}`);
+    app.listen(port);
+    module.exports = app;

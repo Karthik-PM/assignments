@@ -46,7 +46,7 @@ app.get('/file/:filename', function (req, res) {
 
 app.all('*', function (req, res){
     res.status(404).send('Route not found');
-})
+});
 app.listen(port, function(req, res){
     console.log(`Port Active : http://localhost:${port}`); 
 });
