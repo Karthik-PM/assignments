@@ -12,16 +12,38 @@ const app = express();
 // clears every one second
 
 let numberOfRequestsForUser = {};
+
 setInterval(() => {
     numberOfRequestsForUser = {};
-}, 1000)
+}, 1000);
+
+function CountRequests(req, res, next){ 
+    const user_id = req.headers['user-id'];
+    console.log(user_id);
+    
+    if(!numberOfRequestsForUser[user_id]){
+        numberOfRequestsForUser[user_id] = 0;
+    }
+
+    numberOfRequestsForUser[user_id]++;
+    console.log(numberOfRequestsForUser[user_id], " ", user_id);
+    
+    if(numberOfRequestsForUser[user_id] > 4){
+        res.status(404).json({
+            msg: "number of requests exceeded per second\n"
+        })
+    }
+    next();
+}
+app.use(CountRequests);
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
 });
 
-app.post('/user', function(req, res) {
-  res.status(200).json({ msg: 'created dummy user' });
+app.post('/user',function(req, res) {
+    res.status(200).json({ msg: 'created dummy user' });
 });
 
+app.listen(3000);
 module.exports = app;
